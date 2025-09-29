@@ -1,0 +1,12 @@
+.row td,
+.row th,
+.table {
+  border: 1px solid black;
+  /* background: red; */
+  
+}
+
+.element{
+  margin-left: 2px;
+  margin-right: 2px;
+}

@@ -1,0 +1,8 @@
+.mainForm {
+  display: flex;
+  gap: 10px;
+}
+
+.button {
+  margin-top: 15px;
+}
