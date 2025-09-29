@@ -1,4 +1,4 @@
-## shiny-parakeet
+## my-projects
 
 ### About
 This my repo where I store my project files for past projects I did. 
