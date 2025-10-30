@@ -1,0 +1,47 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:external": "RUN_EXTERNAL=true vitest",
+    "test:watch": "vitest --watch",
+    "test:file": "vitest",
+    "playwright": "playwright test",
+    "debug": "node --inspect --enable-source-maps --loader ts-node/esm src/server.ts",
+    "test:employee": "vitest src/fbi/employee.ts/",
+    "test:employee:unit": "vitest src/fbi/employee.ts/ --grep='Unit Tests'",
+    "test:employee:integration": "vitest src/fbi/employee.ts/ --grep='Integration Tests'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "cors": "^2.8.5",
+    "d3-delaunay": "^6.0.4",
+    "dotenv": "^17.0.1",
+    "express": "^4.21.2",
+    "firebase-admin": "^13.5.0",
+    "node-cache": "^5.1.2",
+    "node-fetch": "^3.3.2",
+    "zod": "^3.25.67"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/cors": "^2.8.19",
+    "@types/d3-delaunay": "^6.0.4",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.19.7",
+    "@types/supertest": "^6.0.3",
+    "supertest": "^7.1.4",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
