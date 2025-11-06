@@ -1,7 +1,8 @@
 import { Express } from "express";
 import { Request, Response } from "express";
 import { firestore } from "../firebase/firebasesetup";
-import { error } from "console";
+import { AuthRequest, verifyToken } from "../firebase/handleAuthentication";
+import { admin } from "../firebase/firebasesetup";
 
 
 export function registerBookHandler(app: Express){
@@ -31,9 +32,10 @@ export function registerBookHandler(app: Express){
     
     })
 
-    app.post("/addBookListing", async (req: Request, res: Response) => {
+    app.post("/addBookListing", verifyToken, async (req: AuthRequest, res: Response) => {
         try{
-            const { title, description, condition, user } = req.body;
+            const { title, description, condition } = req.body;
+            const userId = req.user?.uid;
             
             if (!title || !description || !condition){
                 return res.status(400).json({result: "error", error: "Missing fields"})
@@ -43,7 +45,8 @@ export function registerBookHandler(app: Express){
                 title,
                 description,
                 condition,
-                user
+                userId,
+                createdAt: admin.firestore.FieldValue.serverTimestamp()
             });
             
             return res.status(200).json({
@@ -60,7 +63,7 @@ export function registerBookHandler(app: Express){
         }
     })
 
-    app.delete("/deleteBookListing", async (req: Request, res: Response) => {
+    app.delete("/deleteBookListing", verifyToken, async (req: AuthRequest, res: Response) => {
         try{
             const { title, condition, user} = req.body;
 
@@ -78,6 +81,13 @@ export function registerBookHandler(app: Express){
 
             if (book.empty) {
                 return res.status(404).json({result: "error", error: "No such book to delete"})
+            }
+
+            const bookDoc = book.docs[0];
+            const bookData = bookDoc.data();
+
+            if (bookData.userId !== req.user?.uid){
+                return res.status(403).json({ error: "The current user does not have permission to delete this book"});
             }
 
             const batch = firestore.batch();
