@@ -1,12 +1,15 @@
-import axios from "axios";
 import BookListing from "../components/BookListing/BookListing";
 import BookAdder from "../components/BookAdder/BookAdder";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from "react";
+import { Book } from "../components/BookListing/BookListing";
+import BookInfo from "../components/BookInfo/BookInfo";
 
 export default function Home(){
     const { currentUser, logout} = useAuth();
+    const [selectedBook, setSelectedBook] = useState<Book>();
+    const [showBookInfo, setShowBookInfo] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -17,6 +20,15 @@ export default function Home(){
         else {
             navigate("login");
         }
+    }
+
+    const handleBookClick = (book: Book) => {
+        setSelectedBook(book);
+        setShowBookInfo(true);
+    }
+
+    const handleCloseInfo = () => {
+        setShowBookInfo(false);
     }
 
     return(
@@ -38,7 +50,7 @@ export default function Home(){
                 <h2>
                     Book listings
                 </h2>
-                <BookListing />
+                <BookListing onBookClick={handleBookClick}/>
             </div>
                 { currentUser ? 
                 <div>
@@ -51,6 +63,10 @@ export default function Home(){
                 <div>
                     <p>Please login to add a book</p>
                 </div>}
+
+            {(showBookInfo && selectedBook) && (
+                <BookInfo book={selectedBook} onClose={handleCloseInfo}/>
+            )}
             
         </main>
     )

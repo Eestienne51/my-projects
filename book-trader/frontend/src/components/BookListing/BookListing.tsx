@@ -1,7 +1,7 @@
 import api from "../../api/axios";
 import { useEffect, useState } from "react";
 
-interface Book {
+export interface Book {
     id: string;
     title: string;
     description: string;
@@ -9,7 +9,11 @@ interface Book {
     username: string;
 }
 
-export default function BookListing(){
+interface BookListingProps {
+    onBookClick: (book: Book) => void;
+}
+
+export default function BookListing({ onBookClick }: BookListingProps){
     const [books, setBooks] = useState<Book[]>([]);
     // const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -68,7 +72,7 @@ export default function BookListing(){
             </thead>
             <tbody >
                 {books.map((book) =>(
-                    <tr key={book.id} onClick={() => alert(book.id)}>
+                    <tr key={book.id} onClick={() => onBookClick(book)}>
                         <td>{book.title}</td>
                         <td>{book.description}</td>
                         <td>{book.condition}</td>
