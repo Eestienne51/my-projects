@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
-
+import { auth } from "../firebase/firebaseConfig";
+import axios from "axios";
 
 export default function Login() {
     const [isRegistering, setIsRegistering] = useState(false);
@@ -25,23 +26,45 @@ export default function Login() {
             setError("");
             setLoading(true);
             if (isRegistering){
-                if (!usernameExists()){
-                    await signUp(email, password);
+
+                const usernameIsTaken = await usernameExists();
+
+                if (usernameIsTaken){
+                    setError("Username is taken. Please choose another one.")
+                    return;
                 }
-                else {
-                    alert("Please use another username. This one is taken.")
-                }
+
+                const user = await signUp(email, password);
+
+                await addUsername(user.uid);
+
+                alert("Sign-up was successful!");
+                
                 setIsRegistering(false);
             }
             else{
-                if (!usernameExists()){
-                    await signIn(email, password);
-                    sessionStorage.setItem("user", username);
-                    navigate("/");
+                const user = await signIn(email, password);
+
+                const storedUsernames = await getUsersById(user.uid);
+
+                if (!storedUsernames){
+                    setError("No username found for this account. Please contact support.");
+                    await auth.signOut(); 
+                    return;
                 }
-                else{
-                    
+
+                if (storedUsernames[0].username !== username){
+                    console.log(storedUsernames)
+                    console.log(username)
+                    setError("Username does not match this account, please try again.")
+                    await auth.signOut();
+                    return;
                 }
+
+                sessionStorage.setItem("user", username);
+                alert("Signed-in successfully!")
+                navigate("/");
+
             }
         } catch(error: any){
             setError(error.message);
@@ -69,8 +92,40 @@ export default function Login() {
     }
 
     const usernameExists = async () => {
-        const response = await api.get(`http://http://localhost:8080/getUserBookListings?username=${username}`);
-        return (response.status === 200);
+        try {
+            const response = await axios.get(`http://localhost:8080/getUsername?username=${username}`);
+            return (response.status === 200);
+        } catch (error: any){
+            if (error.response?.status === 404){
+                return false;
+            }
+            console.error("Error while getting usernames", error)
+        }
+    }
+
+    const getUsersById = async (userId: string) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/getUsernameById?userId=${userId}`);
+            return response.data.usernames;
+            
+        } catch (error: any) {
+            if (error.response?.status === 404) {
+                return null;
+            }
+            console.error("Error while getting usernames", error)
+        }
+    }
+
+    const addUsername = async (userId: string) => {
+        try {
+            const response = await axios.post("http://localhost:8080/addUsername", {
+                username: username,
+                userId: userId
+            })
+            console.log(response.data.message)
+        } catch (error) {
+            console.error("Error while adding username", error)
+        }
     }
 
 

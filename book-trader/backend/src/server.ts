@@ -1,6 +1,7 @@
 import express, { Express } from "express";
 import cors from "cors";
 import { registerBookHandler } from "./book-handler/bookHandler";
+import { registerUsernameHandler } from "./username-handler/userNameHandler";
 
 
 
@@ -26,6 +27,7 @@ export class ServerApp {
 
     private registerPaths(){
       registerBookHandler(this.app);
+      registerUsernameHandler(this.app);
     }
 
   /**

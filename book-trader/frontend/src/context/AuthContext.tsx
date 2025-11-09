@@ -13,8 +13,8 @@ import { auth } from '../firebase/firebaseConfig';
 interface AuthContextInterface {
     currentUser: User | null;
     loading: boolean;
-    signIn: (email: string, password: string) => Promise<void>;
-    signUp: (email: string, password: string) => Promise<void>;
+    signIn: (email: string, password: string) => Promise<User>;
+    signUp: (email: string, password: string) => Promise<User>;
     signInWithGoogle: () => Promise<void>;
     logout: () => Promise<void>;
 }
@@ -38,13 +38,13 @@ export default function AuthProvider({ children} : {children: React.ReactNode}){
     const [loading, setLoading] = useState<boolean>(true);
 
     const signUp = async (email: string, password: string) => {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert("Account created successfully!");
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        return userCredential.user;
     }
 
     const signIn = async (email: string, password: string) => {
-        await signInWithEmailAndPassword(auth, email, password);
-        alert("Signed-in successfully!");
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        return userCredential.user;
     }
 
     const signInWithGoogle = async () => {

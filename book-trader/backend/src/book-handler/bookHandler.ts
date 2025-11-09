@@ -19,61 +19,15 @@ export function registerBookHandler(app: Express){
             });
 
             return res.status(200).json({
-                result: "success",
+                success: true,
                 books: books
             });
 
         }
         catch(error){
             console.error("Failed to get books:", error);
-            res.status(500).json({ error: "Server error while getting books." });
+            res.status(500).json({ result: false, error: "Server error while getting books." });
         }
-
-    
-    })
-
-    app.get("/getUsername", async (req: Request, res: Response) => {
-
-        try{
-            const username = req.query.username;
-
-            const usernameQuery = firestore.collection("usernames").where("username", "==", username);
-
-            const usernameRecord = await usernameQuery.get();
-
-            let usernames: any[] = []
-            usernameRecord.forEach((doc) => {
-                usernames.push({id: doc.id, ...doc.data()});
-            });
-
-            if (usernames.length > 0){
-                return res.status(200).json({
-                    result: "success",
-                    username: usernames
-                });
-            }
-            else {                
-                return res.status(404).json({
-                    result: "error",
-                    message: "No username found"
-                });
-
-            }
-        
-
-        }
-        catch(error){
-            console.error("Failed to get books:", error);
-            res.status(500).json({ error: "Server error while getting books." });
-        }
-
-    
-    })
-
-
-    //TODO: Implement this 
-
-    app.post("/addUsername", async (req: Request, res: Response) => {
 
     
     })
@@ -84,7 +38,7 @@ export function registerBookHandler(app: Express){
             const userId = req.user?.uid;
             
             if (!title || !description || !condition){
-                return res.status(400).json({result: "error", error: "Missing fields"})
+                return res.status(400).json({success: false, error: "Missing fields"})
             }
 
             const docRef = await firestore.collection("books").add({
@@ -97,14 +51,14 @@ export function registerBookHandler(app: Express){
             });
             
             return res.status(200).json({
-                result: "success",
+                success: true,
                 message: "Book saved successfully",
                 bookId: docRef.id
             })
         } catch (error){
             console.error("Failed to save book", error);
             return res.status(500).json({
-                result: "error",
+                success: false,
                 error: "Error while saving the book"
             })
         }
@@ -115,7 +69,7 @@ export function registerBookHandler(app: Express){
             const { title, condition, user} = req.body;
 
             if (!title || !condition || !user) {
-                return res.status(400).json({result: "error", error: "Missing fields"})
+                return res.status(400).json({success: false, error: "Missing fields"})
             }
 
             const bookQuery = firestore
@@ -127,14 +81,14 @@ export function registerBookHandler(app: Express){
             const book = await bookQuery.get();
 
             if (book.empty) {
-                return res.status(404).json({result: "error", error: "No such book to delete"})
+                return res.status(404).json({success: false, error: "No such book to delete"})
             }
 
             const bookDoc = book.docs[0];
             const bookData = bookDoc.data();
 
             if (bookData.userId !== req.user?.uid){
-                return res.status(403).json({ error: "The current user does not have permission to delete this book"});
+                return res.status(403).json({ success: false, error: "The current user does not have permission to delete this book"});
             }
 
             const batch = firestore.batch();
@@ -147,7 +101,7 @@ export function registerBookHandler(app: Express){
             console.log(`Deleted ${book.docs.length} book(s) with title ${title} for user ${user}`);
 
             res.status(200).json({
-                result: "success",
+                success: true,
                 message: `Deleted ${book.docs.length} book(s) successfully`,
                 deletedCount: book.docs.length
             });
@@ -155,7 +109,7 @@ export function registerBookHandler(app: Express){
         } catch(error){
             console.error("Error while deleting a book", error)
             res.status(500).json({
-                result: error,
+                success: false,
                 error: "Error while deleting trips"
             });
 

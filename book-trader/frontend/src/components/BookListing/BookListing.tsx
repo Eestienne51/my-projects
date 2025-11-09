@@ -20,7 +20,7 @@ export default function BookListing(){
             const response = await api.get("http://localhost:8080/getAllBookListings");
             console.log(response)
 
-            if (response.data.result === "success"){
+            if (response.data.success === true){
                 setBooks(response.data.books);
             } 
         } catch(error){
@@ -66,9 +66,9 @@ export default function BookListing(){
                     <th>Posted By</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody >
                 {books.map((book) =>(
-                    <tr key={book.id}>
+                    <tr key={book.id} onClick={() => alert(book.id)}>
                         <td>{book.title}</td>
                         <td>{book.description}</td>
                         <td>{book.condition}</td>
