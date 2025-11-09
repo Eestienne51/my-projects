@@ -26,7 +26,8 @@ export default function BookAdder(){
             const response = await api.post("http://localhost:8080/addBookListing", {
                 title: title,
                 description: description,
-                condition: condition
+                condition: condition,
+                username: sessionStorage.getItem("user")
             })
 
             setTitle("");

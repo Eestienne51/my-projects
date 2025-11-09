@@ -6,7 +6,7 @@ interface Book {
     title: string;
     description: string;
     condition: string;
-    user: string;
+    username: string;
 }
 
 export default function BookListing(){
@@ -72,7 +72,7 @@ export default function BookListing(){
                         <td>{book.title}</td>
                         <td>{book.description}</td>
                         <td>{book.condition}</td>
-                        <td>{book.user}</td>
+                        <td>{book.username}</td>
                     </tr>
                 ))}
             </tbody>

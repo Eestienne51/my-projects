@@ -32,9 +32,55 @@ export function registerBookHandler(app: Express){
     
     })
 
+    app.get("/getUsername", async (req: Request, res: Response) => {
+
+        try{
+            const username = req.query.username;
+
+            const usernameQuery = firestore.collection("usernames").where("username", "==", username);
+
+            const usernameRecord = await usernameQuery.get();
+
+            let usernames: any[] = []
+            usernameRecord.forEach((doc) => {
+                usernames.push({id: doc.id, ...doc.data()});
+            });
+
+            if (usernames.length > 0){
+                return res.status(200).json({
+                    result: "success",
+                    username: usernames
+                });
+            }
+            else {                
+                return res.status(404).json({
+                    result: "error",
+                    message: "No username found"
+                });
+
+            }
+        
+
+        }
+        catch(error){
+            console.error("Failed to get books:", error);
+            res.status(500).json({ error: "Server error while getting books." });
+        }
+
+    
+    })
+
+
+    //TODO: Implement this 
+
+    app.post("/addUsername", async (req: Request, res: Response) => {
+
+    
+    })
+
     app.post("/addBookListing", verifyToken, async (req: AuthRequest, res: Response) => {
         try{
-            const { title, description, condition } = req.body;
+            const { title, description, condition, username } = req.body;
             const userId = req.user?.uid;
             
             if (!title || !description || !condition){
@@ -46,6 +92,7 @@ export function registerBookHandler(app: Express){
                 description,
                 condition,
                 userId,
+                username,
                 createdAt: admin.firestore.FieldValue.serverTimestamp()
             });
             

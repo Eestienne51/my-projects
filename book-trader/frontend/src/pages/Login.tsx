@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import api from "../api/axios";
 
 
 export default function Login() {
@@ -9,6 +10,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [username, setUsername] = useState("");
 
     const { signIn, signUp, signInWithGoogle } = useAuth()!;
     const navigate = useNavigate();
@@ -23,13 +25,23 @@ export default function Login() {
             setError("");
             setLoading(true);
             if (isRegistering){
-                console.log("hit")
-                await signUp(email, password);
+                if (!usernameExists()){
+                    await signUp(email, password);
+                }
+                else {
+                    alert("Please use another username. This one is taken.")
+                }
                 setIsRegistering(false);
             }
             else{
-                await signIn(email, password);
-                navigate("/");
+                if (!usernameExists()){
+                    await signIn(email, password);
+                    sessionStorage.setItem("user", username);
+                    navigate("/");
+                }
+                else{
+                    
+                }
             }
         } catch(error: any){
             setError(error.message);
@@ -56,6 +68,11 @@ export default function Login() {
         }
     }
 
+    const usernameExists = async () => {
+        const response = await api.get(`http://http://localhost:8080/getUserBookListings?username=${username}`);
+        return (response.status === 200);
+    }
+
 
     return(
         <div className="page">
@@ -67,6 +84,15 @@ export default function Login() {
             {error && <p style={{ color : "red"}}>{error}</p>}
 
             <form onSubmit={handleAuth} className="submit-form">
+                <input
+                    type="username"
+                    placeholder="Username"
+                    value={username}
+                    disabled={loading}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="text-boxes"
+                    required
+                />
                 <input
                     type="email"
                     placeholder="Email"
