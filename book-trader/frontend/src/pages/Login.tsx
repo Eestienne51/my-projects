@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { auth } from "../firebase/firebaseConfig";
 import axios from "axios";
+import { getUsername } from "../utils/utils";
 
 export default function Login() {
     const [isRegistering, setIsRegistering] = useState(false);
@@ -39,29 +40,29 @@ export default function Login() {
                 await addUsername(user.uid);
 
                 alert("Sign-up was successful!");
-                
+
                 setIsRegistering(false);
             }
             else{
                 const user = await signIn(email, password);
 
-                const storedUsernames = await getUsersById(user.uid);
+                const storedUsername = await getUsername(user.uid);
 
-                if (!storedUsernames){
+                if (!storedUsername){
                     setError("No username found for this account. Please contact support.");
                     await auth.signOut(); 
                     return;
                 }
 
-                if (storedUsernames[0].username !== username){
-                    console.log(storedUsernames)
+                if (storedUsername !== username){
+                    console.log(storedUsername)
                     console.log(username)
                     setError("Username does not match this account, please try again.")
                     await auth.signOut();
                     return;
                 }
 
-                sessionStorage.setItem("user", username);
+                localStorage.setItem("user", username);
                 alert("Signed-in successfully!")
                 navigate("/");
 
@@ -98,19 +99,6 @@ export default function Login() {
         } catch (error: any){
             if (error.response?.status === 404){
                 return false;
-            }
-            console.error("Error while getting usernames", error)
-        }
-    }
-
-    const getUsersById = async (userId: string) => {
-        try {
-            const response = await axios.get(`http://localhost:8080/getUsernameById?userId=${userId}`);
-            return response.data.usernames;
-            
-        } catch (error: any) {
-            if (error.response?.status === 404) {
-                return null;
             }
             console.error("Error while getting usernames", error)
         }

@@ -34,15 +34,16 @@ export function registerBookHandler(app: Express){
 
     app.post("/addBookListing", verifyToken, async (req: AuthRequest, res: Response) => {
         try{
-            const { title, description, condition, username } = req.body;
+            const { title, author, description, condition, username } = req.body;
             const userId = req.user?.uid;
             
-            if (!title || !description || !condition){
+            if (!title || !author || !description || !condition){
                 return res.status(400).json({success: false, error: "Missing fields"})
             }
 
             const docRef = await firestore.collection("books").add({
                 title,
+                author,
                 description,
                 condition,
                 userId,
@@ -66,44 +67,33 @@ export function registerBookHandler(app: Express){
 
     app.delete("/deleteBookListing", verifyToken, async (req: AuthRequest, res: Response) => {
         try{
-            const { title, condition, user} = req.body;
+            const { id } = req.body;
 
-            if (!title || !condition || !user) {
+            if (!id) {
                 return res.status(400).json({success: false, error: "Missing fields"})
             }
 
-            const bookQuery = firestore
-            .collection("books")
-            .where("title", "==", title)
-            .where("user", "==", user)
-            .where("condition", "==", condition);
+            const book = await firestore.collection("books").doc(id).get()
 
-            const book = await bookQuery.get();
 
-            if (book.empty) {
+            if (!book.exists) {
                 return res.status(404).json({success: false, error: "No such book to delete"})
             }
 
-            const bookDoc = book.docs[0];
-            const bookData = bookDoc.data();
+            const bookData = book.data();
 
-            if (bookData.userId !== req.user?.uid){
+            if (bookData?.userId !== req.user?.uid){
                 return res.status(403).json({ success: false, error: "The current user does not have permission to delete this book"});
             }
 
-            const batch = firestore.batch();
-            book.docs.forEach((doc) => {
-                batch.delete(doc.ref);
-            })
+            await book.ref.delete();
 
-            await batch.commit()
 
-            console.log(`Deleted ${book.docs.length} book(s) with title ${title} for user ${user}`);
+            console.log(`User ${req.user?.uid} deleted book ${id}`);
 
             res.status(200).json({
                 success: true,
-                message: `Deleted ${book.docs.length} book(s) successfully`,
-                deletedCount: book.docs.length
+                message: "Book deleted successfully"
             });
 
         } catch(error){

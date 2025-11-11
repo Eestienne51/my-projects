@@ -1,5 +1,9 @@
 import { Book } from "../BookListing/BookListing"
 import "./BookInfo.css"
+import { useEffect, useState } from "react";
+import { getUsername } from "../../utils/utils";
+import { useAuth } from "../../context/AuthContext";
+import api from "../../api/axios";
 
 interface bookInfoProps{
     book: Book;
@@ -7,6 +11,58 @@ interface bookInfoProps{
 }
 
 export default function BookInfo({book, onClose} : bookInfoProps){
+    const [displayDelete, setDisplayDelete] = useState<boolean>(false);
+
+    const currentUser = useAuth();
+
+    useEffect(() => {
+        checkIfDeleteBook();
+    }, [])
+
+
+
+    const checkIfDeleteBook = async () => {
+        try {
+            const userId = currentUser?.currentUser?.uid;
+
+            if (!userId) {
+                alert("You must sign-in to delete a book")
+                return;
+            }
+
+            const username = await getUsername(userId);
+
+            if (!username) {
+                alert("You must sign-in to delete a book")
+                return;
+            }
+
+            if (username === book.username) {
+                setDisplayDelete(true);
+            }
+
+        } catch (error){
+            console.error(error, "Error while deleting book")
+        }
+    }
+
+    const deleteBook = async () => {
+        try {
+            const response = await api.delete("http://localhost:8080/deleteBookListing", {
+                data: {
+                    id: book.id
+                }
+            });
+
+            const deleteEvent = new CustomEvent("bookDeleted");
+            window.dispatchEvent(deleteEvent);
+            
+            console.log("Book listing deleted", response.data)
+            onClose();
+        } catch (error){
+            console.error("Error while deleting book: ", error)
+        }
+    }
 
 
     return(
@@ -16,8 +72,11 @@ export default function BookInfo({book, onClose} : bookInfoProps){
                     x
                 </button>
                 <h2>
-                {book.title}
+                    {book.title}
                 </h2>
+                <p>
+                    {book.author}
+                </p>
 
                 <div className="book-details">
                     <div className="detail">
@@ -38,7 +97,11 @@ export default function BookInfo({book, onClose} : bookInfoProps){
 
                 <div className="book-actions">
                     <button className="request-button">Request to Trade</button>
-                    <button className="close-button" onClick={onClose}>Close</button>
+                    {displayDelete ? 
+                        <button className="close-button" onClick={() => deleteBook()}>Delete</button> 
+                        :
+                        <button className="close-button" onClick={onClose}>Close</button>
+                    }
                 </div>
             </div>
         </div>

@@ -1,9 +1,11 @@
 import api from "../../api/axios";
 import { useEffect, useState } from "react";
+import "./BookListing.css"
 
 export interface Book {
     id: string;
     title: string;
+    author: string;
     description: string;
     condition: string;
     username: string;
@@ -40,10 +42,16 @@ export default function BookListing({ onBookClick }: BookListingProps){
             fetchBooks();
         }
 
+        const handleDeletedBook = () => {
+            fetchBooks();
+        }
+
         window.addEventListener("savedBook", handleSavedBook);
+        window.addEventListener("bookDeleted", handleDeletedBook);
 
         return () => {
             window.removeEventListener("savedBook", handleSavedBook);
+            window.removeEventListener("bookDeleted", handleDeletedBook);
         }
     }, [])
 
@@ -65,6 +73,7 @@ export default function BookListing({ onBookClick }: BookListingProps){
             <thead>
                 <tr>
                     <th>Book Title</th>
+                    <th>Author</th>
                     <th>Description</th>
                     <th>Condition</th>
                     <th>Posted By</th>
@@ -72,8 +81,9 @@ export default function BookListing({ onBookClick }: BookListingProps){
             </thead>
             <tbody >
                 {books.map((book) =>(
-                    <tr key={book.id} onClick={() => onBookClick(book)}>
+                    <tr key={book.id} onClick={() => onBookClick(book)} className="book-listing">
                         <td>{book.title}</td>
+                        <td>{book.author}</td>
                         <td>{book.description}</td>
                         <td>{book.condition}</td>
                         <td>{book.username}</td>
