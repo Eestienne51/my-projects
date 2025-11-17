@@ -106,4 +106,44 @@ export function registerBookHandler(app: Express){
         }
     })
 
+    app.get("/getBookById", async (req: Request, res: Response) => {
+
+        try{
+            const bookId = typeof req.query.bookId === "string" ? req.query.bookId.trim() : "";
+
+            if (bookId === ""){
+                return res.status(400).json({
+                    success: false,
+                    message: "No book Id provided to fetch"
+                })
+
+            }
+
+            const book = await firestore.collection("books").doc(bookId).get();
+
+            if (book.exists){
+                return res.status(200).json({
+                    success: true,
+                    books: {id: book.id, ...book.data()}
+                });
+            }
+
+            else {
+                return res.status(404).json({
+                    success: false,
+                    message: "No book found for provided id"
+                });                
+            }
+
+
+
+        }
+        catch(error){
+            console.error("Failed to get book:", error);
+            res.status(500).json({ result: false, error: "Server error while getting required book." });
+        }
+
+    
+    })
+
 }

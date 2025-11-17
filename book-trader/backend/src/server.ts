@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import cors from "cors";
 import { registerBookHandler } from "./book-handler/bookHandler";
 import { registerUsernameHandler } from "./username-handler/userNameHandler";
+import { registerTradeHandler } from "./trade-handler/tradeHandler";
 
 
 
@@ -28,6 +29,7 @@ export class ServerApp {
     private registerPaths(){
       registerBookHandler(this.app);
       registerUsernameHandler(this.app);
+      registerTradeHandler(this.app);
     }
 
   /**
