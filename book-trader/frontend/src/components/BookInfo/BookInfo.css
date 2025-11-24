@@ -76,7 +76,7 @@
     margin-top: 2rem;
 }
 
-.request-button, .close-button {
+.request-button, .close-button, .accept-button, .decline-button {
     flex: 1;
     padding: 0.75rem;
     border: none;
@@ -92,6 +92,24 @@
 
 .request-button:hover {
     background-color: #0056b3;
+}
+
+.accept-button {
+    background-color: #3BB143;
+    color: white
+}
+
+.accept-button:hover{
+    background-color: #2E8B57;
+}
+
+.decline-button {
+    background-color: #D30000;
+    color: white
+}
+
+.decline-button:hover{
+    background-color: #B22222;
 }
 
 .close-button {

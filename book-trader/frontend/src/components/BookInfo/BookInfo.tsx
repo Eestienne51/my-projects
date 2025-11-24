@@ -8,9 +8,11 @@ import api from "../../api/axios";
 interface bookInfoProps{
     book: Book;
     onClose: () => void;
+    trade?: boolean;
+    ownTradeProposal? : boolean
 }
 
-export default function BookInfo({book, onClose} : bookInfoProps){
+export default function BookInfo({book, onClose, trade, ownTradeProposal} : bookInfoProps){
     const [displayDelete, setDisplayDelete] = useState<boolean>(false);
 
     const currentUser = useAuth();
@@ -88,14 +90,31 @@ export default function BookInfo({book, onClose} : bookInfoProps){
                     </div>
                 </div>
 
-                <div className="book-actions">
-                    {displayDelete ? 
-                        <button className="request-button" onClick={() => deleteBook()}>Delete</button> 
-                        :
-                        <button className="request-button">Request to Trade</button>
-                    }
-                    <button className="close-button" onClick={onClose}>Close</button>
-                </div>
+                {trade ? 
+                    <div className="book-actions">
+                        {ownTradeProposal ?
+                            <button className="request-button">Remove</button>
+                            :
+                            <button className="accept-button">Accept</button>
+                        }
+                        {ownTradeProposal ?
+                            <button className="close-button" onClick={onClose}>Close</button>
+                            :
+                            <button className="decline-button">Decline</button>
+                        }
+                    </div>
+                    :
+                    <div className="book-actions">
+                        {displayDelete ? 
+                            <button className="request-button" onClick={() => deleteBook()}>Delete</button> 
+                            :
+                            <button className="request-button">Request to Trade</button>
+                        }
+                        <button className="close-button" onClick={onClose}>Close</button>
+                    </div>
+                }
+                
+        
             </div>
         </div>
 

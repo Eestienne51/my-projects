@@ -17,12 +17,10 @@ interface BookListingProps {
 
 export default function BookListing({ onBookClick }: BookListingProps){
     const [books, setBooks] = useState<Book[]>([]);
-    // const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchBooks = async () => {
         try {
-            // setLoading(true);
             const response = await api.get("http://localhost:8080/getAllBookListings");
             console.log(response)
 
@@ -32,9 +30,7 @@ export default function BookListing({ onBookClick }: BookListingProps){
         } catch(error){
             console.error(error)
             setError("Error while getting books")
-        } finally {
-            // setLoading(false);
-        }
+        } 
     }
 
     useEffect(() => {

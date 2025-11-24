@@ -2,10 +2,15 @@ import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Book } from "../components/BookListing/BookListing";
+import BookInfo from "../components/BookInfo/BookInfo";
 
 export default function Trades(){
     const [requestedTrades, setRequestedTrades] = useState<any[]>([]);
     const [receivedTrades, setReceivedTrades] = useState<any[]>([]);
+    const [showBookInfo, setShowBookInfo] = useState<boolean>(false);
+    const [selectedBook, setSelectedBook] = useState<Book>();
+    const [ownTradeProposal, setOwnTradeProposal] = useState<boolean>();
 
     const currentUser = useAuth();
 
@@ -88,7 +93,11 @@ export default function Trades(){
         getTrades();
     }, [])
 
-
+    const handleBookClick = (book: Book, ownTrade: boolean) => {
+        setShowBookInfo(true);
+        setSelectedBook(book);
+        setOwnTradeProposal(ownTrade);
+    }
 
     
     return(
@@ -105,8 +114,8 @@ export default function Trades(){
                 <tbody>
                     {requestedTrades.map((trade) => (
                         <tr key={trade.id}>
-                            <td>{trade.bookOffered.title}</td>
-                            <td>{trade.bookRequested.title}</td>
+                            <td onClick={() => handleBookClick(trade.bookRequested, true)}>{trade.bookOffered.title}</td>
+                            <td onClick={() => handleBookClick(trade.bookOffered, true)}>{trade.bookRequested.title}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -123,12 +132,19 @@ export default function Trades(){
                 <tbody>
                     {receivedTrades.map((trade) => (
                         <tr key={trade.id}>
-                            <td>{trade.bookRequested.title}</td>
-                            <td>{trade.bookOffered.title}</td>
+                            <td onClick={() => handleBookClick(trade.bookRequested, false)}>{trade.bookRequested.title}</td>
+                            <td onClick={() => handleBookClick(trade.bookOffered, false)}>{trade.bookOffered.title}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            {(showBookInfo && selectedBook) && (
+                <BookInfo 
+                    book={selectedBook} 
+                    onClose={() => setShowBookInfo(false)} 
+                    trade={true} 
+                    ownTradeProposal={ownTradeProposal}/>
+            )}
         </div>
     )
 }
