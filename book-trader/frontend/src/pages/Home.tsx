@@ -34,7 +34,10 @@ export default function Home(){
     return(
         <main>
             <div>
-                <p onClick={() => navigate("/trades")}>Trades</p>
+                { currentUser ? 
+                    <p onClick={() => navigate("/trades")}>Trades</p> 
+                    : 
+                    <p>Please sign in to view trades</p> }
                 <button onClick={() => handleAuthButton()}>
                     {currentUser ? "Logout" : "Login"}
                 </button>

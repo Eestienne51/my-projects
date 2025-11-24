@@ -2,13 +2,14 @@ import { Express } from "express";
 import { Request, Response } from "express";
 import { firestore } from "../firebase/firebasesetup";
 import { admin } from "../firebase/firebasesetup";
+import { verifyToken, AuthRequest } from "../firebase/handleAuthentication";
 
 export function registerUsernameHandler(app: Express){
     app.get("/getUsername", async (req: Request, res: Response) => {
         try{
-            const username = req.query.username;
+            const username = typeof req.query.username === "string" ? req.query.username.trim() : "";
 
-            if (username === ""){
+            if (!username){
                 console.log(username);
                 return res.status(400).json({
                     success: false,
@@ -16,69 +17,59 @@ export function registerUsernameHandler(app: Express){
                 })
             }
 
-            const usernameQuery = firestore.collection("usernames").where("username", "==", username);
+            const usernameQuery = firestore.collection("usernames").where("username", "==", username).limit(1);
 
-            const usernameRecord = await usernameQuery.get();
+            const snapshot = await usernameQuery.get();
 
-            let usernames: any[] = []
-            usernameRecord.forEach((doc) => {
-                usernames.push({id: doc.id, ...doc.data()});
-            });
-
-            if (usernames.length > 0){
+            if (!snapshot.empty){
                 return res.status(200).json({
                     success: true,
-                    message: `User ${username} is registered`,
+                    exists: true,
+                    message: `Username is taken`,
                 });
             }
             else {                
-                return res.status(404).json({
-                    success: false,
-                    message: "No username found"
+                return res.status(200).json({
+                    success: true,
+                    exists: false,
+                    message: `Username is available`,
                 });
-
             }
         
 
         }
         catch(error){
-            console.error("Failed to get books:", error);
-            res.status(500).json({ error: "Server error while getting books." });
+            console.error("Error checking username:", error);
+            res.status(500).json({ success: false, error: "Server error while checking username." });
         }
-
-    
     })
+
 
     app.get("/getUsernameById", async (req: Request, res: Response) => {
         try{
-            const userId = req.query.userId;
+            const userId = typeof req.query.userId === "string" ? req.query.userId.trim() : "";
 
-            if (userId === ""){
+            if (!userId){
                 return res.status(400).json({
                     success: false,
                     message: "No user ID provided. Please provide one and try again."
                 })
             }
 
-            const userIdQuery = firestore.collection("usernames").where("userId", "==", userId);
+            const usernameRecord = await firestore.collection("usernames").doc(userId).get();
 
-            const usernameRecord = await userIdQuery.get();
-
-            let usernames: any[] = []
-            usernameRecord.forEach((doc) => {
-                usernames.push({id: doc.id, ...doc.data()});
-            });
-
-            if (usernames.length > 0){
+            if (usernameRecord.exists){
+                const usernameData = usernameRecord.data();
                 return res.status(200).json({
                     success: true,
-                    usernames: usernames
+                    username: usernameData?.username,
+                    userId: usernameRecord.id
                 });
             }
             else {                
                 return res.status(404).json({
                     success: false,
-                    message: "No username found"
+                    message: "No username found for this user"
                 });
 
             }
@@ -86,40 +77,65 @@ export function registerUsernameHandler(app: Express){
 
         }
         catch(error){
-            console.error("Failed to get books:", error);
-            res.status(500).json({ error: "Server error while getting books." });
+            console.error("Failed to get username:", error);
+            res.status(500).json({ success: false, error: "Server error while getting username." });
         }
 
     
     })
 
 
-    app.post("/addUsername", async (req: Request, res: Response) => {
+    app.post("/addUsername", verifyToken, async (req: AuthRequest, res: Response) => {
         try {
-            const { username, userId }  = req.body;
-            console.log("1")
-            if (!username || !userId) {
+            const { username }  = req.body;
+            const authenticatedUserId = req.user?.uid;
+
+            
+            if (!username || !authenticatedUserId) {
                 return res.status(400).json({
                     success: false,
                     message: "No user provided. Please provide one and try again."
                 })
             }
-            console.log("2")
-            const docRef = await firestore.collection("usernames").add({
-                username,
-                userId,
-                createdAt: admin.firestore.FieldValue.serverTimestamp()
-            })
+
+            // Check if username already exists
+            const usernameQuery = firestore.collection("usernames")
+            .where("username", "==", username)
+            .limit(1);
+
+            const existingUsername = await usernameQuery.get();
+
+            if (!existingUsername.empty) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Username already taken"
+                });
+            }
+
+            const existingUserDoc = await firestore.collection("usernames").doc(authenticatedUserId).get();
             
-            console.log("3")
+            if (existingUserDoc.exists) {
+                return res.status(409).json({
+                    success: false,
+                    message: "User already has a username"
+                });
+            }   
+
+            await firestore.collection("usernames").doc(authenticatedUserId).set({
+                username: username,
+                userId: authenticatedUserId,
+                createdAt: admin.firestore.FieldValue.serverTimestamp()
+            });  
+
             return res.status(200).json({
                 success: true,
-                message: `Username ${username} saved successfully`,
-                bookId: docRef.id
-            })            
+                username: username,
+                message: `Username ${username} saved successfully`
+            })  
 
 
         } catch (error) {
+            console.error("Failed to add username:", error);
             return res.status(500).json({
                 success: false,
                 message: "Error while saving username"

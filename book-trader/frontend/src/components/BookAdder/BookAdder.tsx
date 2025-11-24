@@ -8,7 +8,7 @@ import { getUsername } from "../../utils/utils";
 export default function BookAdder(){
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [condition, setCondition] = useState<string>("");
+    const [condition, setCondition] = useState<string>("New");
     const [author, setAuthor] = useState<string>("");
 
     const currentUser = useAuth();

@@ -124,7 +124,7 @@ export function registerBookHandler(app: Express){
             if (book.exists){
                 return res.status(200).json({
                     success: true,
-                    books: {id: book.id, ...book.data()}
+                    book: {id: book.id, ...book.data()}
                 });
             }
 
@@ -134,8 +134,6 @@ export function registerBookHandler(app: Express){
                     message: "No book found for provided id"
                 });                
             }
-
-
 
         }
         catch(error){

@@ -30,14 +30,16 @@ export default function Login() {
 
                 const usernameIsTaken = await usernameExists();
 
+                console.log(usernameIsTaken)
+
                 if (usernameIsTaken){
                     setError("Username is taken. Please choose another one.")
                     return;
                 }
 
-                const user = await signUp(email, password);
+                await signUp(email, password);
 
-                await addUsername(user.uid);
+                await addUsername();
 
                 alert("Sign-up was successful!");
 
@@ -47,6 +49,8 @@ export default function Login() {
                 const user = await signIn(email, password);
 
                 const storedUsername = await getUsername(user.uid);
+
+                console.log(storedUsername);
 
                 if (!storedUsername){
                     setError("No username found for this account. Please contact support.");
@@ -95,7 +99,7 @@ export default function Login() {
     const usernameExists = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/getUsername?username=${username}`);
-            return (response.status === 200);
+            return (response.data.exists);
         } catch (error: any){
             if (error.response?.status === 404){
                 return false;
@@ -104,11 +108,10 @@ export default function Login() {
         }
     }
 
-    const addUsername = async (userId: string) => {
+    const addUsername = async () => {
         try {
-            const response = await axios.post("http://localhost:8080/addUsername", {
-                username: username,
-                userId: userId
+            const response = await api.post("http://localhost:8080/addUsername", {
+                username: username
             })
             console.log(response.data.message)
         } catch (error) {

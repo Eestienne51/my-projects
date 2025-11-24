@@ -24,17 +24,10 @@ export default function BookInfo({book, onClose} : bookInfoProps){
     const checkIfDeleteBook = async () => {
         try {
             const userId = currentUser?.currentUser?.uid;
+            let username;
 
-            if (!userId) {
-                alert("You must sign-in to delete a book")
-                return;
-            }
-
-            const username = await getUsername(userId);
-
-            if (!username) {
-                alert("You must sign-in to delete a book")
-                return;
+            if (userId) {
+                username = await getUsername(userId);
             }
 
             if (username === book.username) {
@@ -96,12 +89,12 @@ export default function BookInfo({book, onClose} : bookInfoProps){
                 </div>
 
                 <div className="book-actions">
-                    <button className="request-button">Request to Trade</button>
                     {displayDelete ? 
-                        <button className="close-button" onClick={() => deleteBook()}>Delete</button> 
+                        <button className="request-button" onClick={() => deleteBook()}>Delete</button> 
                         :
-                        <button className="close-button" onClick={onClose}>Close</button>
+                        <button className="request-button">Request to Trade</button>
                     }
+                    <button className="close-button" onClick={onClose}>Close</button>
                 </div>
             </div>
         </div>
