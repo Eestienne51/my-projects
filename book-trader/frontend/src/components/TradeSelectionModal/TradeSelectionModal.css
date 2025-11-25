@@ -1,0 +1,155 @@
+.trade-options-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; 
+}
+
+.trade-options-popup {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 70vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.trade-options-popup h3 {
+    margin-top: 0;
+    flex-shrink: 0; 
+}
+
+
+.trade-options-popup > table:first-of-type {
+    flex-shrink: 0;
+    margin-bottom: 1rem;
+}
+
+.available-books-container {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 200px;
+    max-height: 300px;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.available-books-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.available-books-container thead {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+    z-index: 1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.available-books-container th,
+.available-books-container td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: #000;
+}
+
+.requested-book-container {
+    margin-bottom: 1rem;
+    overflow-x: auto; 
+}
+
+.requested-book-container table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; 
+}
+
+.requested-book-container th,
+.requested-book-container td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: #000;
+    word-wrap: break-word; 
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-shrink: 0;
+}
+
+.confirm-button, .cancel-button {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.confirm-button {
+    background-color: #4caf50;
+    color: white;
+}
+
+.confirm-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.confirm-button:hover:not(:disabled) {
+    background-color: #45a049;
+}
+
+.cancel-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #da190b;
+}
+
+.book-checkbox {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.book-listing:has(.book-checkbox:checked) {
+    background-color: #0095ff;
+}
+
+table td:first-child {
+    text-align: center;
+}
+
+.x-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #666;
+    line-height: 1;
+    z-index: 1;
+}
+
+.x-button:hover {
+    color: #000;
+}

@@ -142,6 +142,41 @@ export function registerBookHandler(app: Express){
         }
 
     
+    });
+
+
+    app.get("/getUserBooks/:userId", verifyToken, async (req: AuthRequest, res: Response) => {
+        try{
+            const userId = req.params.userId;
+
+            if (userId === ""){
+                return res.status(400).json({
+                    success: false,
+                    error: "No user Id provided"
+                })
+            }
+
+            const bookQuery = firestore.collection("books")
+            .where("userId", "==", userId);
+
+            const booksDoc = await bookQuery.get();
+
+            const books: any[] = [];
+
+            booksDoc.forEach((doc) => {
+                books.push({id: doc.id, ...doc.data()});
+            })
+
+            return res.status(200).json({
+                success: true,
+                books: books
+            })
+        } catch (error){
+            return res.status(500).json({
+                success: false,
+                error: error
+            })
+        }
     })
 
 }

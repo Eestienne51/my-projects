@@ -1,10 +1,10 @@
 Todos:
-Put the trade information on a separate page
-Add styling to all pages
 Set-up trading logic:
 - Users request a trade and submit what they want to trade in return.
-- Users go to their trades page to see all active and previous trades
+- Users go to their trades page to see all active and previous trades (active done)
+Add styling to all pages
 Add an Info button to describe the different conditions
+Add a header for navigation
 
 As New / New: The book is in perfect, flawless condition, as if it were never used. It may still be in the original shrink-wrap.
 Fine (F): The book is nearly new but not quite crisp. It may show very minor signs of handling, but pages are clean and unmarked.
