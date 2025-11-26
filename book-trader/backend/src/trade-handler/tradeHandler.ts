@@ -54,6 +54,7 @@ export function registerTradeHandler(app: Express){
         try{
             const { accepterId, bookRequested, requesterId, bookOffered } = req.body;
 
+            console.log([accepterId, bookRequested, requesterId, bookOffered])
             if (!accepterId || !bookRequested || !requesterId || !bookOffered){
                 return res.status(400).json({
                     success: false,
@@ -66,6 +67,7 @@ export function registerTradeHandler(app: Express){
                 bookRequested,
                 requesterId,
                 bookOffered,
+                status: "pending",
                 createdAt:  admin.firestore.FieldValue.serverTimestamp()
             });
 
@@ -112,6 +114,113 @@ export function registerTradeHandler(app: Express){
                 success: false,
                 error: error
             })
+        }
+    });
+
+    app.delete("/deleteTrade/:tradeId", verifyToken, async (req: AuthRequest, res: Response) => {
+        try{
+            const tradeId = typeof req.params.tradeId === "string" ? req.params.tradeId.trim() : "";
+
+            if (!tradeId){
+                return res.status(400).json({
+                    success: false,
+                    error: "No trade ID provided. Please provide one and try again."
+                })
+            }
+
+            const trade = await firestore.collection("trades").doc(tradeId).get();
+
+            if (!trade.exists){
+                return res.status(404).json({
+                    success: false,
+                    error: "No trade found to delete"
+                })
+            }
+
+            const tradeData = trade.data();
+
+            if (tradeData?.requesterId !== req.user?.uid){
+                return res.status(403).json({
+                    success: false,
+                    error: "User does not have permission to delete this trade"
+                })
+            }
+
+            await trade.ref.delete();
+
+            console.log("Trade delete successfully");
+
+            return res.status(200).json({
+                success: true,
+                message: "Trade deleted successfully"
+            })
+
+        } catch(error){
+            console.error("Error while deleting a trade", error)
+            res.status(500).json({
+                success: false,
+                error: "Error while deleting trade"
+            });
+        }
+    })
+
+
+    app.put("/updateTradeStatus/:tradeId", verifyToken, async (req: AuthRequest, res: Response) => {
+        try{
+            const tradeId = typeof req.params.tradeId === "string" ? req.params.tradeId.trim() : "";
+
+            const { updatedStatus } = req.body;
+
+            if (!tradeId || !updatedStatus){
+                return res.status(400).json({
+                    success: false,
+                    error: "Missing fields and/ or parameters"
+                })
+            }
+
+            const validStates = ["pending", "accepted", "declined"];
+
+            if (!validStates.includes(updatedStatus)){
+                return res.status(400).json({
+                    success: false,
+                    error: "Incorrect status provided"
+                })
+            }
+
+            const tradeDoc = await firestore.collection("trades").doc(tradeId).get()
+
+            if (!tradeDoc.exists){
+                return res.status(404).json({
+                    success: false,
+                    error: "No trade found to update"
+                })
+            }
+
+            const tradeData = tradeDoc.data();
+
+            if (tradeData?.status === "accepted" || tradeData?.status === "declined"){
+                return res.status(400).json({
+                    success: false,
+                    error: "Cannot update accepted or declined trade"
+                })
+            }
+
+            await firestore.collection("trades").doc(tradeId).update({
+                status: updatedStatus,
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
+            });
+
+            return res.status(200).json({
+                success: true,
+                message: `Status of trade ${tradeId} successfully updated to ${updatedStatus}`
+            })
+
+        } catch(error){
+            console.error("Error while updating trade status", error)
+            res.status(500).json({
+                success: false,
+                error: "Error while updating trade status"
+            });
         }
     })
 

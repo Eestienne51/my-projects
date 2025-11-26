@@ -9,6 +9,7 @@ export interface Book {
     description: string;
     condition: string;
     username: string;
+    userId: string;
 }
 
 interface BookListingProps {

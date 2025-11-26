@@ -5,15 +5,17 @@ import { getUsername } from "../../utils/utils";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../api/axios";
 import TradeSelectionModal from "../TradeSelectionModal/TradeSelectionModal";
+import { Trade } from "../../pages/Trades";
 
 interface bookInfoProps{
     book: Book;
     onClose: () => void;
     trade?: boolean;
-    ownTradeProposal? : boolean
+    ownTradeProposal?: boolean;
+    tradeDetails?: Trade
 }
 
-export default function BookInfo({book, onClose, trade, ownTradeProposal} : bookInfoProps){
+export default function BookInfo({book, onClose, trade, ownTradeProposal, tradeDetails} : bookInfoProps){
     const [displayDelete, setDisplayDelete] = useState<boolean>(false);
     const [displayTradeModal, setDisplayTradeModal] = useState<boolean>(false);
 
@@ -61,8 +63,52 @@ export default function BookInfo({book, onClose, trade, ownTradeProposal} : book
         }
     }
 
-    const onTradeSubmit = (bookOfferedId: string) => {
+    const onTradeSubmit = async (bookOfferedId: string) => {
+        try{
+            const response = await api.post("http://localhost:8080/addTrade", {
+                accepterId: book.userId, 
+                bookRequested: book.id, 
+                requesterId: currentUser?.currentUser?.uid, 
+                bookOffered: bookOfferedId
+                
+            });
 
+            if (response.data.success){
+                alert("Trade Saved Successfully!");
+                onClose();
+            }
+        } catch(error){
+            console.error("Error while adding trade: ", error)
+        }
+    }
+
+    const removeTradeOffer = async () => {
+        try{
+            const response = await api.delete(`http://localhost:8080/deleteTrade/${tradeDetails?.id}`);
+
+            if (response.data.success){
+                alert("Trade Deleted Successfully!")
+                onClose();
+            }
+        } catch(error){
+            console.error("Error while removing trade: ", error)
+        }
+    }
+
+    const updateTrade = async (updatedStatus: string) => {
+        try{
+            const response = await api.put(`http://localhost:8080/updateTradeStatus/${tradeDetails?.id}`, {
+                updatedStatus: updatedStatus
+            });
+
+            if (response.data.success){
+                alert("Trade updated Successfully!");
+                onClose();
+            }
+
+        } catch(error){
+            console.error("Error while removing trade: ", error)
+        }
     }
 
 
@@ -100,14 +146,14 @@ export default function BookInfo({book, onClose, trade, ownTradeProposal} : book
                     {trade ? 
                         <div className="book-actions">
                             {ownTradeProposal ?
-                                <button className="request-button">Remove</button>
+                                <button className="request-button" onClick={() => removeTradeOffer()}>Remove Offer</button>
                                 :
-                                <button className="accept-button">Accept</button>
+                                <button className="accept-button" onClick={() => updateTrade("accepted")}>Accept</button>
                             }
                             {ownTradeProposal ?
                                 <button className="close-button" onClick={onClose}>Close</button>
                                 :
-                                <button className="decline-button">Decline</button>
+                                <button className="decline-button" onClick={() => updateTrade("declined")}>Decline</button>
                             }
                         </div>
                         :

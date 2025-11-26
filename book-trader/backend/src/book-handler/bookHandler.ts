@@ -100,7 +100,7 @@ export function registerBookHandler(app: Express){
             console.error("Error while deleting a book", error)
             res.status(500).json({
                 success: false,
-                error: "Error while deleting trips"
+                error: "Error while deleting book"
             });
 
         }
