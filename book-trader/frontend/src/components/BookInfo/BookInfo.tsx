@@ -74,6 +74,8 @@ export default function BookInfo({book, onClose, trade, ownTradeProposal, tradeD
             });
 
             if (response.data.success){
+                const submittedTradeEvent = new CustomEvent("tradeSubmitted");
+                window.dispatchEvent(submittedTradeEvent);
                 alert("Trade Saved Successfully!");
                 onClose();
             }
@@ -87,6 +89,8 @@ export default function BookInfo({book, onClose, trade, ownTradeProposal, tradeD
             const response = await api.delete(`http://localhost:8080/deleteTrade/${tradeDetails?.id}`);
 
             if (response.data.success){
+                const removedTradeEvent = new CustomEvent("tradeRemoved");
+                window.dispatchEvent(removedTradeEvent);
                 alert("Trade Deleted Successfully!")
                 onClose();
             }
@@ -102,6 +106,8 @@ export default function BookInfo({book, onClose, trade, ownTradeProposal, tradeD
             });
 
             if (response.data.success){
+                const updatedTradeEvent = new CustomEvent("tradeUpdated");
+                window.dispatchEvent(updatedTradeEvent);
                 alert("Trade updated Successfully!");
                 onClose();
             }

@@ -8,7 +8,8 @@ import BookInfo from "../components/BookInfo/BookInfo";
 export interface Trade{
     id: string,
     bookOffered: Book,
-    bookRequested: Book
+    bookRequested: Book,
+    status: string
 }
 
 export default function Trades(){
@@ -61,7 +62,8 @@ export default function Trades(){
                     return {
                         id: trade.id,
                         bookOffered: bookOffered.data.book,
-                        bookRequested: bookRequested.data.book
+                        bookRequested: bookRequested.data.book,
+                        status: trade.status
                     }
                 })
             );
@@ -80,7 +82,8 @@ export default function Trades(){
                     return {
                         id: trade.id,
                         bookOffered: bookOffered.data.book, 
-                        bookRequested: bookRequested.data.book
+                        bookRequested: bookRequested.data.book,
+                        status: trade.status
                     };
 
 
@@ -107,6 +110,23 @@ export default function Trades(){
         setClickedTrade(trade);
     }
 
+    useEffect(() => {
+        const handleChangedTrade = () => {
+            getTrades();
+        }
+
+        window.addEventListener("tradeSubmitted", handleChangedTrade);
+        window.addEventListener("tradeRemoved", handleChangedTrade);
+        window.addEventListener("tradeUpdated", handleChangedTrade);
+        
+
+        return () => {
+            window.removeEventListener("tradeSubmitted", handleChangedTrade);
+            window.removeEventListener("tradeRemoved", handleChangedTrade);
+            window.removeEventListener("tradeUpdated", handleChangedTrade);
+        }
+    }, [])
+
     
     return(
         <div>
@@ -117,6 +137,7 @@ export default function Trades(){
                     <tr>
                         <th>In Exchange For</th>
                         <th>Requesting</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -124,6 +145,7 @@ export default function Trades(){
                         <tr key={trade.id}>
                             <td onClick={() => handleBookClick(trade.bookRequested, true, trade)}>{trade.bookOffered.title}</td>
                             <td onClick={() => handleBookClick(trade.bookOffered, true, trade)}>{trade.bookRequested.title}</td>
+                            <td>{trade.status}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -135,6 +157,7 @@ export default function Trades(){
                     <tr>
                         <th>Requesting</th>
                         <th>In Exchange For</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -142,6 +165,7 @@ export default function Trades(){
                         <tr key={trade.id}>
                             <td onClick={() => handleBookClick(trade.bookRequested, false, trade)}>{trade.bookRequested.title}</td>
                             <td onClick={() => handleBookClick(trade.bookOffered, false, trade)}>{trade.bookOffered.title}</td>
+                            <td>{trade.status}</td>
                         </tr>
                     ))}
                 </tbody>

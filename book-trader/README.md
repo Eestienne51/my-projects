@@ -1,7 +1,6 @@
 Todos:
 Set-up trading logic:
 - Users request a trade and submit what they want to trade in return.
-    - Make separate tables for pending, accepted and decline trades, also allow books that are in requested trades
     - Update trade list upon updating updating trade status
 - Users go to their trades page to see all active and previous trades (active done)
 Add styling to all pages

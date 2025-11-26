@@ -90,15 +90,19 @@ export function registerTradeHandler(app: Express){
         try{
             const bookId = req.params.bookId;
 
-            const requestedBookTradeQuery = firestore.collection("trades")
-            .where("bookRequested", "==", bookId).limit(1);
-            const offeredBookTradeQuery = firestore.collection("trades")
-            .where("bookOffered", "==", bookId).limit(1);
+            // const requestedBookTradeQuery = firestore.collection("trades")
+            // .where("bookRequested", "==", bookId).limit(1);
+            const acceptedTradeQuery = firestore.collection("trades")
+            .where("bookOffered", "==", bookId).where("status", "==", "accepted").limit(1);
 
-            const requestedBookTradeDoc = await requestedBookTradeQuery.get();
-            const offeredBookTradeDoc = await offeredBookTradeQuery.get();
+            const pendingTradeQuery = firestore.collection("trades")
+            .where("bookOffered", "==", bookId).where("status", "==", "pending").limit(1);
 
-            if (!requestedBookTradeDoc.empty || !offeredBookTradeDoc.empty){
+            // const requestedBookTradeDoc = await requestedBookTradeQuery.get();
+            const acceptedTradeDoc = await acceptedTradeQuery.get();
+            const pendingTradeDoc = await pendingTradeQuery.get();
+
+            if (!acceptedTradeDoc.empty || !pendingTradeDoc.empty){
                 return res.status(200).json({
                     success: true,
                     involvedInTrade: true
