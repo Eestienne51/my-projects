@@ -47,16 +47,32 @@ export default function BookInfo({book, onClose, trade, ownTradeProposal, tradeD
 
     const deleteBook = async () => {
         try {
-            const response = await api.delete("http://localhost:8080/deleteBookListing", {
+
+            const tradeResponse = await api.delete(`http://localhost:8080/deleteAllTradesForBook?bookId=${book.id}`);
+
+            if (!tradeResponse.data.success){
+                alert("Error while deleting trades");
+                return;
+            }
+
+            const removedTradeEvent = new CustomEvent("tradeRemoved");
+            window.dispatchEvent(removedTradeEvent);
+
+            const bookResponse = await api.delete("http://localhost:8080/deleteBookListing", {
                 data: {
                     id: book.id
                 }
             });
 
+            if (!bookResponse.data.success){
+                alert("Error while deleting book");
+                return;
+            }
+
             const deleteEvent = new CustomEvent("bookDeleted");
             window.dispatchEvent(deleteEvent);
             
-            console.log("Book listing deleted", response.data)
+            console.log("Book listing deleted", bookResponse.data)
             onClose();
         } catch (error){
             console.error("Error while deleting book: ", error)

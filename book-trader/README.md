@@ -1,9 +1,6 @@
 Todos:
-Set-up trading logic:
-- Users request a trade and submit what they want to trade in return.
-    - Update trade list upon updating updating trade status
-- Users go to their trades page to see all active and previous trades (active done)
 Add styling to all pages
+- Add toast instead of alerts
 Add an Info button to describe the different conditions
 Add a header for navigation
 

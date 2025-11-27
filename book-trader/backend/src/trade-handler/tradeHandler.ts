@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import { firestore } from "../firebase/firebasesetup";
 import { AuthRequest, verifyToken } from "../firebase/handleAuthentication";
 import { admin } from "../firebase/firebasesetup";
+import { error } from "console";
+import { all } from "axios";
 
 export function registerTradeHandler(app: Express){
     app.get("/getTradesForUser", async (req: Request, res: Response) => {
@@ -224,6 +226,84 @@ export function registerTradeHandler(app: Express){
             res.status(500).json({
                 success: false,
                 error: "Error while updating trade status"
+            });
+        }
+    })
+
+    app.delete("/deleteAllTradesForBook", verifyToken, async (req: AuthRequest, res: Response) => {
+        try{
+            const bookId = typeof req.query.bookId === "string" ? req.query.bookId.trim() : "";
+
+            if (!bookId){
+                return res.status(400).json({
+                    success: false,
+                    error: "Missing query parameter"
+                })
+            }
+
+            const bookDoc = await firestore.collection("books").doc(bookId).get()
+
+            if (!bookDoc.exists){
+                return res.status(404).json({
+                    success: false,
+                    error: "Book not found"
+                })
+            }
+
+            const bookData = bookDoc.data();
+
+            if (bookData?.userId !== req.user?.uid){
+                return res.status(403).json({
+                    success: false,
+                    error: "You don't have permission to delete the trades associated with this book"
+                })
+            }
+
+            const requestedBooksQuery = firestore.collection("trades")
+            .where("bookRequested", "==", bookId);
+
+            const offeredBooksQuery = firestore.collection("trades")
+            .where("bookOffered", "==", bookId);
+
+            const [requestedBooksDocs, offeredBooksDocs] = await Promise.all([
+                requestedBooksQuery.get(),
+                offeredBooksQuery.get()
+            ])
+
+            const allTrades = [...requestedBooksDocs.docs, ...offeredBooksDocs.docs]
+
+            if (allTrades.length === 0){
+                return res.status(200).json({
+                    success: true,
+                    message: "No trades to delete for this book",
+                    deletedCount: 0
+                })
+            }
+
+            const batch = firestore.batch();
+            let deletedCount = 0;
+
+            allTrades.forEach((doc) => {
+                batch.delete(doc.ref);
+                deletedCount++;
+            })
+
+            await batch.commit();
+
+            console.log(`Deleted ${deletedCount} trades`);
+
+            return res.status(200).json({
+                success: true,
+                message: `Deleted ${deletedCount} trades successfully`,
+                deletedCount: deletedCount
+            })
+
+
+        } catch(error){
+            console.error("Error while deleting trades for book", error);
+            return res.status(500).json({
+                success: false,
+                error: "Error while deleting trades"
             });
         }
     })
