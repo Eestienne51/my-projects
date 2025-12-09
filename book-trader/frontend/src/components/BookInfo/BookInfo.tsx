@@ -47,6 +47,9 @@ export default function BookInfo({book, onClose, trade, ownTradeProposal, tradeD
 
     const deleteBook = async () => {
         try {
+            if (!window.confirm("Are you sure you want to delete this book? This action cannot be undone.")) {
+                return;
+            }
 
             const tradeResponse = await api.delete(`http://localhost:8080/deleteAllTradesForBook?bookId=${book.id}`);
 

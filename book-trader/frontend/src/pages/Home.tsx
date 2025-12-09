@@ -5,6 +5,8 @@ import { useAuth } from "../context/AuthContext";
 import { useEffect, useState } from "react";
 import { Book } from "../components/BookListing/BookListing";
 import BookInfo from "../components/BookInfo/BookInfo";
+import Header from "../components/Header/Header";
+import "./Home.css";
 
 export default function Home(){
     const { currentUser, logout} = useAuth();
@@ -12,15 +14,6 @@ export default function Home(){
     const [showBookInfo, setShowBookInfo] = useState<boolean>(false);
 
     const navigate = useNavigate();
-
-    const handleAuthButton = async () => {
-        if (currentUser) {
-            await logout();
-        }
-        else {
-            navigate("login");
-        }
-    }
 
     const handleBookClick = (book: Book) => {
         setSelectedBook(book);
@@ -32,47 +25,56 @@ export default function Home(){
     }
 
     return(
-        <main>
-            <div>
-                { currentUser ? 
-                    <p onClick={() => navigate("/trades")}>Trades</p> 
-                    : 
-                    <p>Please sign in to view trades</p> }
-                <button onClick={() => handleAuthButton()}>
-                    {currentUser ? "Logout" : "Login"}
-                </button>
-            </div>
-            <div>
-                <h1>
-                    Home
-                </h1>
-                <p>
-                    Explore all the books available to trade below
-                </p>
-            </div>
-            <div>
-                <h2>
-                    Book listings
-                </h2>
-                <BookListing onBookClick={handleBookClick}/>
-            </div>
-                { currentUser ? 
-                <div>
-                    <h2>
-                        Add a book to the listings
-                    </h2>
-                    <BookAdder />
-                </div>
-                : 
-                <div>
-                    <p>Please login to add a book</p>
-                </div>}
+        <>
+            <Header home={true} showLogin={true}/>
+            <main className="home-container">
+                <div className={`content-wrapper ${!currentUser ? 'full-width' : ''}`}>
+                    <div className={`listings-section ${!currentUser ? 'full-width' : ''}`}>
+                        <div className="home-header">
+                            <h1>
+                                Home
+                            </h1>
+                            <p>
+                                Explore all the books available to trade below
+                            </p>
+                        </div>
+                        <h2>
+                            Book listings
+                        </h2>
+                        <BookListing onBookClick={handleBookClick}/>
+                    </div>
 
-            {(showBookInfo && selectedBook) && (
-                <BookInfo book={selectedBook} onClose={handleCloseInfo}/>
-            )}
-            
-        </main>
+                    { currentUser && ( 
+                        <div className="adder-section">
+                            <h2>
+                                Add a book to the listings
+                            </h2>
+                            <BookAdder />
+                        </div>
+                    )}
+                </div>
+
+                {!currentUser && (
+                    <div className="login-prompt">
+                        <p>Please login to add a book</p>
+                    </div>
+                )}
+
+                {(showBookInfo && selectedBook) && (
+                    <BookInfo book={selectedBook} onClose={handleCloseInfo}/>
+                )}
+
+                <button
+                    className="settings-btn"
+                    onClick={() => handleUserAgreement()}
+                    aria-label="Access settings"
+                >
+                    i
+                </button>
+                
+                
+            </main>
+        </>
     )
 
 }

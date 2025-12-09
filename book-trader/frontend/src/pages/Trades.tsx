@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Book } from "../components/BookListing/BookListing";
 import BookInfo from "../components/BookInfo/BookInfo";
+import Header from "../components/Header/Header";
+import "./Trades.css";
 
 export interface Trade{
     id: string,
@@ -129,55 +131,108 @@ export default function Trades(){
 
     
     return(
-        <div>
-            <h2>Trades</h2>
-            <h3>Requested Trades</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>In Exchange For</th>
-                        <th>Requesting</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {requestedTrades.map((trade) => (
-                        <tr key={trade.id}>
-                            <td onClick={() => handleBookClick(trade.bookRequested, true, trade)}>{trade.bookOffered.title}</td>
-                            <td onClick={() => handleBookClick(trade.bookOffered, true, trade)}>{trade.bookRequested.title}</td>
-                            <td>{trade.status}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+        <div className="trades-page">
+            <Header trades={true} showLogin={true}/>
+            <div className="trades-container">
+                <div className="trades-header">
+                    <h2>My Trades</h2>
+                </div>
+                <div className="trades-section">
+                    <h3>Requested Trades</h3>
+                    {requestedTrades.length === 0 ? (
+                        <div className="no-trades">
+                            <p>You haven't requested any trades</p>
+                        </div>
+                    ) : (
 
-            <h3>Received Trades</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Requesting</th>
-                        <th>In Exchange For</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {receivedTrades.map((trade) => (
-                        <tr key={trade.id}>
-                            <td onClick={() => handleBookClick(trade.bookRequested, false, trade)}>{trade.bookRequested.title}</td>
-                            <td onClick={() => handleBookClick(trade.bookOffered, false, trade)}>{trade.bookOffered.title}</td>
-                            <td>{trade.status}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            {(showBookInfo && selectedBook) && (
-                <BookInfo 
-                    book={selectedBook} 
-                    onClose={() => setShowBookInfo(false)} 
-                    trade={true} 
-                    ownTradeProposal={ownTradeProposal}
-                    tradeDetails={clickedTrade}/>
-            )}
+                        <table className="trades-table">
+                            <thead>
+                                <tr>
+                                    <th>Offering</th>
+                                    <th>Requesting</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {requestedTrades.map((trade) => (
+                                    <tr key={trade.id}>
+                                        <td 
+                                            onClick={() => handleBookClick(trade.bookOffered, true, trade)}
+                                            className="clickable-cell"
+                                        >
+                                            {trade.bookOffered.title}
+                                        </td>
+                                        <td 
+                                            onClick={() => handleBookClick(trade.bookRequested, true, trade)}
+                                            className="clickable-cell"
+                                        >
+                                            {trade.bookRequested.title}
+                                        </td>
+                                        <td>
+                                            <span className={`status-badge status-${trade.status.toLowerCase()}`}>
+                                                {trade.status}
+                                            </span>    
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+
+
+                <div className="trades-section">
+                    <h3>Received Trades</h3>
+                    {receivedTrades.length === 0 ? (
+                        <div className="no-trades">
+                            <p>You haven't received any trade requests yet.</p>
+                        </div>
+                    ) :(
+                    <table className="trades-table">
+                        <thead>
+                            <tr>
+                                <th>They are Requesting</th>
+                                <th>They are Offering</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {receivedTrades.map((trade) => (
+                                <tr key={trade.id}>
+                                    <td 
+                                        onClick={() => handleBookClick(trade.bookRequested, false, trade)}
+                                        className="clickable-cell"
+                                    >
+                                        {trade.bookRequested.title}
+                                    </td>
+                                    <td 
+                                        onClick={() => handleBookClick(trade.bookOffered, false, trade)}
+                                        className="clickable-cell"
+                                    > 
+                                        {trade.bookOffered.title}
+                                    </td>
+                                    <td>
+                                        <span className={`status-badge status-${trade.status.toLowerCase()}`}>
+                                            {trade.status}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    )}
+
+                    {(showBookInfo && selectedBook) && (
+                        <BookInfo 
+                            book={selectedBook} 
+                            onClose={() => setShowBookInfo(false)} 
+                            trade={true} 
+                            ownTradeProposal={ownTradeProposal}
+                            tradeDetails={clickedTrade}/>
+                    )}
+                
+                </div>
+            </div>
         </div>
     )
 }

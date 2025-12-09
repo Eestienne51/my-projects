@@ -5,6 +5,8 @@ import api from "../api/axios";
 import { auth } from "../firebase/firebaseConfig";
 import axios from "axios";
 import { getUsername } from "../utils/utils";
+import Header from "../components/Header/Header";
+import "./Login.css";
 
 export default function Login() {
     const [isRegistering, setIsRegistering] = useState(false);
@@ -80,22 +82,6 @@ export default function Login() {
         }
     }
 
-    const handleGoogleSignIn = async () => {
-        try{
-            setError("");
-            setLoading(true);
-            await signInWithGoogle();
-            navigate("/")
-        }
-        catch(error: any){
-            setError(error.message);
-            console.error(error);
-        } 
-        finally {
-            setLoading(false);
-        }
-    }
-
     const usernameExists = async () => {
         try {
             const response = await axios.get(`http://localhost:8080/getUsername?username=${username}`);
@@ -121,72 +107,67 @@ export default function Login() {
 
 
     return(
-        <div className="page">
-            <div className="login-box">
-                <h1 className="sign-in-text">
-                {isRegistering ? "Create Account" : "Sign In"}
-                </h1>
+        <div className="login-page">
+            <Header/>
+            <div className="login-content">
+                <div className="login-box">
+                    <h1 className="sign-in-text">
+                    {isRegistering ? "Create Account" : "Sign In"}
+                    </h1>
 
-            {error && <p style={{ color : "red"}}>{error}</p>}
+                    {error && <p className="error-message">{error}</p>}
 
-            <form onSubmit={handleAuth} className="submit-form">
-                <input
-                    type="username"
-                    placeholder="Username"
-                    value={username}
-                    disabled={loading}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="text-boxes"
-                    required
-                />
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    disabled={loading}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="text-boxes"
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    disabled={loading}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="text-boxes"
-                    required
-                />
-                <button
-                    type="submit"
-                    className="submit-button"
-                    disabled={loading}
-                >
-                    {loading ? "Loading..." : isRegistering ? "Sign Up" : "Sign In"}
-                </button>
-            </form>
+                    <form onSubmit={handleAuth} className="submit-form">
+                        <input
+                            type="username"
+                            placeholder="Username"
+                            value={username}
+                            disabled={loading}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className="text-boxes"
+                            required
+                        />
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            disabled={loading}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="text-boxes"
+                            required
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            disabled={loading}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="text-boxes"
+                            required
+                        />
+                        <button
+                            type="submit"
+                            className="submit-button"
+                            disabled={loading}
+                        >
+                            {loading ? "Loading..." : isRegistering ? "Sign Up" : "Sign In"}
+                        </button>
+                    </form>
 
-            <button
-                onClick={handleGoogleSignIn}
-                className="google-button"
-                disabled={loading}
-                >
-                Sign in with Google
-            </button>
-
-            <p className="register-text">
-                {isRegistering
-                    ? "Already have an account?"
-                    : "Don't have an account?"}{" "}
-                <button
-                    onClick={() => setIsRegistering(!isRegistering)}
-                    className="register-button"
-                    disabled={loading}
-                >
-                    {isRegistering ? "Sign in" : "Register"}
-                </button>
-            </p>
+                    <p className="register-text">
+                        {isRegistering
+                            ? "Already have an account?"
+                            : "Don't have an account?"}{" "}
+                        <button
+                            onClick={() => setIsRegistering(!isRegistering)}
+                            className="register-button"
+                            disabled={loading}
+                        >
+                            {isRegistering ? "Sign in" : "Register"}
+                        </button>
+                    </p>
+                </div>
+            </div>
         </div>
-    </div>
     )
 }

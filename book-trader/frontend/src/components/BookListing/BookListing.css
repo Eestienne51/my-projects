@@ -1,3 +1,37 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #F9FAF7;
+    box-shadow: 0 2px 4px rgba(62, 74, 70, 0.65);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+thead {
+    background-color: #3E4A46;
+    color: #F9FAF7;
+}
+
+th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
 .book-listing {
     cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.book-listing:hover {
+    background-color: #E8F5F3;
+}
+
+.book-listing:last-child td {
+    border-bottom: none;
 }

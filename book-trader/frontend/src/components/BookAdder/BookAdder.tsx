@@ -2,6 +2,7 @@ import { useState } from "react"
 import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
 import { getUsername } from "../../utils/utils";
+import "./BookAdder.css"
 
 
 
@@ -45,8 +46,8 @@ export default function BookAdder(){
 
             setTitle("");
             setDescription("");
-            setCondition("");
             setAuthor("");
+            setCondition("New");
 
             console.log("Saved Book", response.data)
             const savedEvent = new CustomEvent("savedBook");
@@ -63,47 +64,46 @@ export default function BookAdder(){
 
 
     return (
-        <div>
-        <div>
-            <p>
-                Add a book below. Include its title, description and condition.
-            </p>
-        </div>
-        <div>
-            <input 
-                placeholder="Title" 
-                value={title} 
-                onChange={(e) => setTitle(e.target.value)}
-            />
+        <div className="book-adder-container">
+            <div className="book-adder-description">
+                <p>
+                    Add a book below. Include its title, author, description and condition.
+                </p>
+            </div>
+            <div className="book-adder-form">
+                <input 
+                    placeholder="Title" 
+                    value={title} 
+                    onChange={(e) => setTitle(e.target.value)}
+                />
 
-            <input 
-                placeholder="Author" 
-                value={author}
-                onChange={(e) => setAuthor(e.target.value)}
-            />
+                <input 
+                    placeholder="Author" 
+                    value={author}
+                    onChange={(e) => setAuthor(e.target.value)}
+                />
 
-            <input 
-                placeholder="Description" 
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-            />
-            <select 
-                value={condition}
-                onChange={(e) => setCondition(e.target.value)}
-            >
-                <option value="New">New</option>
-                <option value="Fine">Fine</option>
-                <option value="Near Fine">Near Fine</option>
-                <option value="Very Good">Very good</option>
-                <option value="Good">Good</option>
-                <option value="Fair">Fair</option>
-                <option value="Poor">Poor</option>
+                <input 
+                    placeholder="Description" 
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+                <select 
+                    value={condition}
+                    onChange={(e) => setCondition(e.target.value)}
+                >
+                    <option value="New">New</option>
+                    <option value="Fine">Fine</option>
+                    <option value="Near Fine">Near Fine</option>
+                    <option value="Very Good">Very Good</option>
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Poor">Poor</option>
 
-            </select>
-        </div>
-        <div>
-            <button onClick={ () => {handleSubmit()}}>Submit</button>
-        </div>
+                </select>
+
+                <button onClick={handleSubmit} className="submit-book-button">Submit</button>
+            </div>
         </div>
     )
 }

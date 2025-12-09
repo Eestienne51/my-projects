@@ -1,0 +1,145 @@
+.login-page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.login-box {
+    background: #F9FAF7;
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(62, 74, 70, 0.65);
+    width: 100%;
+    max-width: 450px;
+}
+
+.sign-in-text {
+    text-align: center;
+    color: #3E4A46;
+    margin-bottom: 2rem;
+}
+
+.error-message {
+    background-color: #F5E6E6;
+    color: #8B4545;
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #8B4545;
+}
+
+.submit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.text-boxes {
+    padding: 0.875rem;
+    border: 1px solid #D6D8D5;
+    background-color: #F9FAF7;
+    color: #3E4A46;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.text-boxes:focus {
+    outline: none;
+    border-color: #3FA7A0;
+}
+
+.text-boxes:disabled {
+    background-color: #E8EAE7;
+    cursor: not-allowed;
+}
+
+.submit-button {
+    padding: 0.875rem;
+    background-color: #3FA7A0;
+    color: #F9FAF7;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.submit-button:hover:not(:disabled) {
+    background-color: #358F88;
+}
+
+.submit-button:disabled {
+    background-color: #C5C7C4;
+    cursor: not-allowed;
+}
+
+.google-button {
+    width: 100%;
+    padding: 0.875rem;
+    background-color: #F9FAF7;
+    color: #3E4A46;
+    border: 1px solid #D6D8D5;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.google-button:hover:not(:disabled) {
+    background-color: #F2F3F0;
+    border-color: #3FA7A0;
+}
+
+.google-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.register-text {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #3E4A46;
+}
+
+.register-button {
+    background: none;
+    border: none;
+    color: #3FA7A0;
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: underline;
+    padding: 0;
+    margin-left: 0.25rem;
+}
+
+.register-button:hover:not(:disabled) {
+    color: #7FAF9B;
+}
+
+.register-button:disabled {
+    color: #C5C7C4;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .login-box {
+        padding: 2rem;
+    }
+}

@@ -1,6 +1,7 @@
 Todos:
 Add styling to all pages
 - Add toast instead of alerts
+- Add a header
 Add an Info button to describe the different conditions
 Add a header for navigation
 
