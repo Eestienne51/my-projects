@@ -1,0 +1,125 @@
+.condition-popup-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(62, 74, 70, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.condition-popup-content {
+    background: #F9FAF7;
+    padding: 2.5rem;
+    border-radius: 12px;
+    max-width: 700px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(62, 74, 70, 0.2);
+}
+
+.condition-popup-content h2 {
+    color: #3E4A46;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-size: 2rem;
+    border-bottom: 3px solid #3FA7A0;
+    padding-bottom: 1rem;
+}
+
+.condition-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.condition-item {
+    padding: 1.25rem;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid #7FAF9B;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.condition-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(127, 175, 155, 0.2);
+}
+
+.condition-item h3 {
+    color: #3E4A46;
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.condition-item p {
+    color: #3E4A46;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.x-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #3E4A46;
+    line-height: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.x-button:hover {
+    background-color: rgba(62, 74, 70, 0.1);
+}
+
+/* Scrollbar styling for the popup */
+.condition-popup-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.condition-popup-content::-webkit-scrollbar-track {
+    background: #E8F5F3;
+    border-radius: 4px;
+}
+
+.condition-popup-content::-webkit-scrollbar-thumb {
+    background: #7FAF9B;
+    border-radius: 4px;
+}
+
+.condition-popup-content::-webkit-scrollbar-thumb:hover {
+    background: #3FA7A0;
+}
+
+@media (max-width: 768px) {
+    .condition-popup-content {
+        padding: 2rem 1.5rem;
+        max-height: 85vh;
+    }
+
+    .condition-popup-content h2 {
+        font-size: 1.5rem;
+    }
+
+    .condition-item h3 {
+        font-size: 1.1rem;
+    }
+
+    .condition-item {
+        padding: 1rem;
+    }
+}

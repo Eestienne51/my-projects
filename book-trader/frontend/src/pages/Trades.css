@@ -38,7 +38,7 @@
     width: 100%;
     border-collapse: collapse;
     background-color: #F9FAF7;
-    box-shadow: 0 2px 8px rgba(62, 74, 70, 0.1);
+    box-shadow: 0 2px 8px rgba(62, 74, 70, 0.65);
     border-radius: 8px;
     overflow: hidden;
 }

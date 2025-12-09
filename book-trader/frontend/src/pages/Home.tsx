@@ -7,11 +7,14 @@ import { Book } from "../components/BookListing/BookListing";
 import BookInfo from "../components/BookInfo/BookInfo";
 import Header from "../components/Header/Header";
 import "./Home.css";
+import BookConditionPopUp from "../components/BookConditionPopUp/BookConditionPopUp";
 
 export default function Home(){
     const { currentUser, logout} = useAuth();
     const [selectedBook, setSelectedBook] = useState<Book>();
     const [showBookInfo, setShowBookInfo] = useState<boolean>(false);
+    const [showConditionGuide, setShowConditionGuide] = useState<boolean>(false);
+
 
     const navigate = useNavigate();
 
@@ -22,6 +25,10 @@ export default function Home(){
 
     const handleCloseInfo = () => {
         setShowBookInfo(false);
+    }
+
+    const handleConditionGuideToggle = () => {
+        setShowConditionGuide(!showConditionGuide);
     }
 
     return(
@@ -64,10 +71,15 @@ export default function Home(){
                     <BookInfo book={selectedBook} onClose={handleCloseInfo}/>
                 )}
 
+                {showConditionGuide && (
+                    <BookConditionPopUp onClose={handleConditionGuideToggle}/>
+                )}
+
                 <button
                     className="settings-btn"
-                    onClick={() => handleUserAgreement()}
-                    aria-label="Access settings"
+                    onClick={handleConditionGuideToggle}
+                    aria-label="View book condition guide"
+                    title="Book Condition Guide"
                 >
                     i
                 </button>
