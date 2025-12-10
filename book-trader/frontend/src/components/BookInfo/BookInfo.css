@@ -4,7 +4,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(62, 74, 70, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,7 +12,7 @@
 }
 
 .book-info-popup {
-    background: white;
+    background: #F9FAF7;
     padding: 2rem;
     border-radius: 8px;
     max-width: 500px;
@@ -20,17 +20,18 @@
     max-height: 80vh;
     overflow-y: auto;
     position: relative;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(62, 74, 70, 0.2);
 }
 
 .book-info-popup h2 {
     margin-bottom: 0.25rem;
     font-size: 2.1rem;
+    color: #3E4A46;
 }
 
 .book-info-popup > p {
     margin-top: 0;
-    color: #111111;
+    color: #3E4A46;
     font-style: italic;
     font-size: 1.1rem;
     margin-bottom: 1.25rem;
@@ -44,12 +45,19 @@
     border: none;
     font-size: 2rem;
     cursor: pointer;
-    color: #666;
+    color: #3E4A46;
     line-height: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
 }
 
 .x-button:hover {
-    color: #000;
+    background-color: rgba(62, 74, 70, 0.1);
 }
 
 .book-details {
@@ -63,12 +71,14 @@
 .detail-row strong {
     display: block;
     margin-bottom: 0.25rem;
-    color: #333;
+    color: #3E4A46;
+    font-weight: 600;
 }
 
 .detail-row p {
     margin: 0;
-    color: #666;
+    color: #3E4A46;
+    line-height: 1.6;
 }
 
 .book-actions {
@@ -84,40 +94,86 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.request-button:active,
+.accept-button:active,
+.decline-button:active,
+.close-button:active {
+    transform: scale(0.98);
 }
 
 .request-button {
-    background-color: #007bff;
-    color: white;
+    background-color: #3FA7A0;
+    color: #F9FAF7;
 }
 
 .request-button:hover {
-    background-color: #0056b3;
+    background-color: #358f89;
 }
 
 .accept-button {
-    background-color: #3BB143;
-    color: white
+    background-color: #7FAF9B;
+    color: #F9FAF7;
 }
 
-.accept-button:hover{
-    background-color: #2E8B57;
+.accept-button:hover {
+    background-color: #6a9682;
 }
 
 .decline-button {
-    background-color: #D30000;
-    color: white
+    background-color: #D6A184;
+    color: #F9FAF7;
 }
 
-.decline-button:hover{
-    background-color: #B22222;
+.decline-button:hover {
+    background-color: #C08A6F;
 }
 
 .close-button {
-    background-color: #6c757d;
-    color: white;
+    background-color: #3E4A46;
+    color: #F9FAF7;
 }
 
 .close-button:hover {
-    background-color: #5a6268;
+    background-color: #2d3733;
+}
+
+
+.book-info-popup::-webkit-scrollbar {
+    width: 8px;
+}
+
+.book-info-popup::-webkit-scrollbar-track {
+    background: #E8F5F3;
+    border-radius: 4px;
+}
+
+.book-info-popup::-webkit-scrollbar-thumb {
+    background: #7FAF9B;
+    border-radius: 4px;
+}
+
+.book-info-popup::-webkit-scrollbar-thumb:hover {
+    background: #3FA7A0;
+}
+
+@media (max-width: 768px) {
+    .book-info-popup {
+        padding: 1.5rem;
+    }
+
+    .book-info-popup h2 {
+        font-size: 1.8rem;
+    }
+
+    .book-actions {
+        flex-direction: column;
+    }
+
+    .request-button, .close-button, .accept-button, .decline-button {
+        width: 100%;
+    }
 }
