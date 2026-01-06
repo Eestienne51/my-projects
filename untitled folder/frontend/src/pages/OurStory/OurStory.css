@@ -1,0 +1,155 @@
+.our-story-container {
+  width: 100%;
+  min-height: 120vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 140px 40px 60px 40px;
+  text-align: center;
+}
+
+main[role="main"] {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.intro-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.welcome-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 5rem;
+  font-weight: bold;
+  color: #2d5016;
+  margin-bottom: 40px;
+  line-height: 1.2;
+}
+
+.welcome-subtitle {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #2d5016;
+  margin-bottom: 80px;
+  line-height: 1.6;
+}
+
+.action-links {
+  margin-top: 20px;
+}
+
+.action-text {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #2d5016;
+  line-height: 1.8;
+}
+
+.link-text {
+  text-decoration: underline;
+  cursor: pointer;
+  transition: opacity 0.3s;
+  outline: none;
+}
+
+.link-text:hover {
+  opacity: 0.7;
+}
+
+.link-text:focus {
+  outline: 3px solid #d9884e;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.about-us-section {
+  margin-top: 100px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.about-us-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 2.5rem;
+  color: #000000;
+  margin-bottom: 30px;
+}
+
+.team-members {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  margin-bottom: 50px;
+}
+
+.team-member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.member-photo-placeholder {
+  width: 200px;
+  height: 250px;
+  background-color: #e8f5e9;
+  border: 3px solid #a8d5a8;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.member-photo {
+  width: 200px;
+  height: 250px;
+  object-fit: cover;
+  border: 3px solid #a8d5a8;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.member-photo-zoom-out {
+  object-fit: contain;
+  background-color: #f9f9f9;
+}
+
+.member-name {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2d5016;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.member-role {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  margin: 0;
+}
+
+.bio-text {
+  margin-top: 50px;
+  text-align: left;
+  padding: 0 20px;
+}
+
+.bio-text p {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #000000;
+  margin-bottom: 25px;
+  text-indent: 2em;
+}
