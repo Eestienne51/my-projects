@@ -6,7 +6,6 @@ As my first proper individual project, I decided to build this book trading plat
 
 ### Tech Stack
 I used Typescript with Node.js for the backend functionality and React.js for the frontend. As previously mentioned, Firebase is used for authentication and persistent data storage. I used CSS for styling throughout and Vite in order to run my frontend. 
-![agxfi9](https://github.com/user-attachments/assets/2fa8de22-70cc-4242-8b79-e34a1a023c94)
 
 ### Design Choices
 
