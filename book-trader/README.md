@@ -2,31 +2,58 @@
 ## Book Trading Platform by Eestienne51
 
 ### Overview
-As my first proper individual project, I decided to build this book trading platform. On it, users can list books and trade these with others. The app has authentication and persistent data storage functionality powered by Firebase. Upon creating an account or logging in, users are taken to the homepage, where they can check the existing listings or add a new listing using the Book Adder form. The trades page contains all of the current user's trades, separated by those that they have received and those that they have themselves requested. 
+This project is my first fully independent application: a book trading platform that allows users to list books and trade them with others. The app uses Firebase for authentication and persistent data storage. After creating an account or logging in, users are directed to the homepage, where they can browse existing listings or add a new one using the Book Adder form. The Trades page displays all trades associated with the current user, clearly separated into incoming trade requests and trades they have initiated.
+
+### Getting Started
+- Clone the my-projects repository at https://github.com/Eestienne51/my-projects
+- On your device open the book-trader folder within my-projects
+- Open a terminal and run npm i, then do the same for the backend and frontend 
+- In the fronted add the following environment variables from your Firebase codebase: 
+    - VITE_FIREBASE_API_KEY= 
+    - VITE_FIREBASE_AUTH_DOMAIN= 
+    - VITE_FIREBASE_PROJECT_ID=
+    - VITE_FIREBASE_STORAGE_BUCKET=
+    - VITE_FIREBASE_MESSAGING_SENDER_ID=
+    - VITE_FIREBASE_APP_ID=
+- In the backend, from your Firebase codebase, add the following environment variables: 
+    - FIREBASE_PROJECT_ID=
+    - FIREBASE_CLIENT_EMAIL=
+    - FIREBASE_PRIVATE_KEY=
+- To run the project:
+    - Open two terminal windows
+    - Navigate to the backend folder in one and to the backend folder in the other
+    - Run "npm run dev" in both windows
+    - Navigate to http://localhost:8000/
 
 ### Tech Stack
-I used Typescript with Node.js for the backend functionality and React.js for the frontend. As previously mentioned, Firebase is used for authentication and persistent data storage. I used CSS for styling throughout and Vite in order to run my frontend. 
+The backend is built with TypeScript and Node.js, while the frontend is developed using React. Firebase is used for user authentication and persistent data storage. Styling is handled with CSS, and the frontend is bundled and served using Vite.
 
 ### Design Choices
 
-#### Protected Routes
-I decided to use protected routes for all of my endpoints that are not "GET" endpoints. I decided to do this as I felt that some sort of authentication was needed for updating this formation. Although these are just books, this was good practice for how to handle more sensitive data in the future. In order to achieve these protected routes, I created an AuthRequest interface that extended the normal Express Request functionality. Then, I passed in the user's token in the frontend when calling the endpoint, and this was then checked by the firebase admin to be legitimate. I could then use the decoded user Id and email in backend endpoints. 
+#### Security
+All non-GET endpoints are protected using authentication middleware. This ensures that only authenticated users can create, update, or modify data. While the application manages book listings rather than sensitive information, implementing protected routes reflects best practice and provides a foundation for handling more sensitive data in future projects.
 
-#### Trade Status
-I decided to display the trades in only two categories, Requested and Received. However, each of these also has a field in the backend that can only be pending, declined or accepted. Then depending on the trade status, it is coloured in a different colour on the trades page.
+To support this, I created a custom AuthRequest interface that extends the standard Express Request type. The frontend includes the user’s authentication token with each protected request, which is then verified using the Firebase Admin SDK. Once validated, the decoded user ID and email are made available to backend endpoints for authorization and request handling.
+
+#### Trades
+Trades are displayed in two main categories: Requested and Received. Each trade also has a backend status (pending, accepted, or declined) which is reflected visually on the Trades page using different colours to make trade states immediately clear to the user.
+
+When a user views a book they do not own, they are given the option to initiate a trade. Selecting this option opens a pop-up where they can choose one of their own books to offer in exchange. If the book belongs to the current user, the trade option is hidden and replaced with the ability to delete the listing instead. This ensures users can only request trades for other users’ books, while retaining full control over their own listings.
+
+At any point during the process, users can exit or cancel the action using the close (“×”) button.
 
 #### Usernames
-This was initially pretty tricky to implement, but I thought it was necessary as it added a more personal touch to the book listings and made it a lot simpler for users to navigate, as they wouldn't be looking at emails or userIds for the listings, but rather a username. These are stored under the userId in the database for ease of access. 
+Although initially challenging to implement, adding usernames significantly improved the user experience. Usernames give book listings a more personal feel and make them easier to navigate, as users see readable identifiers instead of email addresses or user IDs. For efficient access, usernames are stored in the database under each user’s unique ID.
 
 #### Book Condition Pop-Up
-Before undertaking this project, I didn't actually realise that there was such a wide range of book condition, hence I thought it would be useful for users to be able to see a description of the different options, in order to pick he correct one.
-
-#### Delete/ Trade Request
-When a user clicks on a book that isn't theirs, they see an option to trade for that book, an option that they cannot see if it is their own book. When they click the trade button, they are taken to another pop-up, where they can select which of their books to trade against the selected ones. If it is their own book, they can instead delete this book. This allows users to delete their book listing if they no longer want it displayed, or, if it is another persons's book, they can request a trade, but naturally not delete it. In addition, they can leave/ cancel at any time with the x button.
+Before starting this project, I hadn’t realised how many different book condition categories exist. To make this clearer for users, the app provides short descriptions for each condition, helping them select the most accurate option when listing a book.
 
 ### How to
-When first opening the website, you may log-in/ create an account by clicking on the log-in button. Before logging in, you may check out any of the listings, but will be unable to request any trades. After logging in, you can add a book using the form, check out a book by clicking on it, or navigate to the trades page by clicking on the icon in the header. If you want to request a trade, click on a book that isn't yours and the Request Trade button. There, you can choose one of your books to trade and submit the trade offer. You can delete one of you books by clicking on the listing and pressing the delete button. On Trade page, you may remove your own trade offers and accept or decline trade offers that users have submitted to you, by clicking on a trade and pressing the appropriate buttons. 
+When first visiting the site, users can log in or create an account using the Log In button. Before signing in, they may browse existing book listings but cannot request trades.
 
+Once logged in, users can add a book using the listing form, view book details by clicking on a listing, or navigate to the Trades page via the header icon. To request a trade, users select a book they do not own and click Request Trade, then choose one of their own books to offer and submit the request. If the selected book belongs to the current user, a Delete option is shown instead, allowing them to remove their own listing.
+
+On the Trades page, users can manage all trade activity: they may cancel their own trade requests and accept or decline trade offers submitted by other users.
 
 
 ## Link to repo (under book-trader): https://github.com/Eestienne51/my-projects
