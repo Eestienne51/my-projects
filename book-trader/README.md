@@ -55,6 +55,32 @@ Once logged in, users can add a book using the listing form, view book details b
 
 On the Trades page, users can manage all trade activity: they may cancel their own trade requests and accept or decline trade offers submitted by other users.
 
+### Photos
+
+Homepage
+
+<img width="800" height="400" alt="Homepage" src="https://github.com/user-attachments/assets/124e0a74-4700-4f0f-8b0f-0885741bff6a" />
+
+
+Trades Page
+
+<img width="800" height="400" alt="Trades Page" src="https://github.com/user-attachments/assets/2c7a7c06-7d99-4644-8844-fc6275e4204c" />
+
+
+Book Pop-up
+
+<img width="800" height="400" alt="Expanded Book View" src="https://github.com/user-attachments/assets/620166b7-a1ef-456d-96a4-04a03502c660" />
+
+
+Trade Information Pop-up
+
+<img width="800" height="400" alt="Trade View" src="https://github.com/user-attachments/assets/cf23a965-f3f0-4b8e-91ed-15d091aec10d" />
+
+
+Trade Sumbmission Pop-up
+
+<img width="800" height="400" alt="Trade Sumbmission" src="https://github.com/user-attachments/assets/a64cf827-a5ba-4475-8a9d-ab61782ba274" />
+
 
 ## Link to repo (under book-trader): https://github.com/Eestienne51/my-projects
 
